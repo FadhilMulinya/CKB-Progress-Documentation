@@ -1,0 +1,72 @@
+# =========================
+# Node / Package Managers
+# =========================
+node_modules/
+.pnpm-store/
+.pnpm/
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Build / Output
+# =========================
+dist/
+build/
+out/
+coverage/
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS / Editor Junk
+# =========================
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Marscode (you have this)
+.marscode/
+
+# =========================
+# Cache / Temp
+# =========================
+.cache/
+tmp/
+temp/
+
+# =========================
+# Rust (Fiber / CKB builds)
+# =========================
+target/
+
+# =========================
+# CKB / Fiber local data
+# =========================
+ckb-local/
+fiber-node/
+light-client/
+
+# =========================
+# Secrets / Keys
+# =========================
+*.key

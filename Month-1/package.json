@@ -1,0 +1,25 @@
+{
+  "name": "ckb-month-1",
+  "version": "1.0.0",
+  "description": "CKB Month 1 progress documentation and runnable scripts",
+  "type": "module",
+  "scripts": {
+    "wallet": "tsx week-1/wallet.ts",
+    "balance": "tsx week-1/balance.ts",
+    "send": "tsx week-1/sendCKB.ts",
+    "check": "tsc --noEmit",
+    "fiber:info": "tsx week-2/fiber/getNodeInfo.ts",
+    "fiber:channels": "tsx week-2/fiber/listChannels.ts",
+    "fiber:open": "tsx week-2/fiber/openChannel.ts",
+    "fiber:close": "tsx week-2/fiber/closeChannel.ts"
+  },
+  "dependencies": {
+    "@ckb-lumos/base": "^0.23.0",
+    "@ckb-lumos/lumos": "^0.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

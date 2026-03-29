@@ -1,0 +1,30 @@
+{
+  "name": "ckb-progress-documentation",
+  "version": "1.0.0",
+  "description": "A structured repository to track daily and weekly progress over 12 weeks (3 Months). This system is designed for consistency, reflection, and accountability while building on the CKB blockchain.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx balance.ts",
+    "check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FadhilMulinya/CKB-Progress-Documentation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FadhilMulinya/CKB-Progress-Documentation/issues"
+  },
+  "homepage": "https://github.com/FadhilMulinya/CKB-Progress-Documentation#readme",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@ckb-lumos/lumos": "^0.23.0",
+    "config": "link:@ckb-lumos/lumos/config"
+  }
+}
