@@ -1,5 +1,3 @@
-
-
 export type JsonRpcSuccess<T> = {
   jsonrpc: "2.0";
   id: number;

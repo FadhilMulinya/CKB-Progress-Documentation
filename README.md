@@ -24,7 +24,6 @@ This system is designed to help me track my progress over 12 weeks (3 Months) in
 * Week 1 → [Go](./Month-1/week-1/README.md)
 * Week 2 → [Go](./Month-1/week-2/README.md)
 * Week 3 → [Go](./Month-1/week-3/README.md)
-* Week 4 → [Go](./Month-1/week-4/README.md)
 
 ➡️ Full Month Overview → [Month 1](./Month-1/README.md)
 
@@ -32,10 +31,10 @@ This system is designed to help me track my progress over 12 weeks (3 Months) in
 
 ### 📁 Month 2
 
+* Week 4 → [Go](./Month-2/week-4/README.md)
 * Week 5 → [Go](./Month-2/week-5/README.md)
 * Week 6 → [Go](./Month-2/week-6/README.md)
 * Week 7 → [Go](./Month-2/week-7/README.md)
-* Week 8 → [Go](./Month-2/week-8/README.md)
 
 ➡️ Full Month Overview → [Month 2](./Month-2/README.md)
 
@@ -43,10 +42,10 @@ This system is designed to help me track my progress over 12 weeks (3 Months) in
 
 ### 📁 Month 3
 
+* Week 8 → [Go](./Month-3/week-8/README.md)
 * Week 9 → [Go](./Month-3/week-9/README.md)
 * Week 10 → [Go](./Month-3/week-10/README.md)
 * Week 11 → [Go](./Month-3/week-11/README.md)
-* Week 12 → [Go](./Month-3/week-12/README.md)
 
 ➡️ Full Month Overview → [Month 3](./Month-3/README.md)
 
