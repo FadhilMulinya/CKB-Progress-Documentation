@@ -1,225 +1,114 @@
+# Week 2
+### Payment Channels, Fiber Network & Taking Transactions Off-Chain
 
+Alright, so Week 2 is where things started getting *really* interesting. I went deeper into the **Cell (UTXO) model**, finally explored **payment channels**, got my hands dirty with the **Fiber Network**, and even started wrapping my head around **Perun state channels**.
 
-# Week 2 — Payment Channels, Fiber Network & Off-Chain Transactions
-
-This week i ent deeper into the **Cell (UTXO) model**, explored **payment channels**, and started working with the **Fiber Network**, while also getting introduced to **Perun state channels**.
-
+---
 
 ##  Lessons
 
-### 1. Deeper Understanding of the Cell (UTXO) Model
+### 1. Deeper Understanding of Cell Model
+Last week, I saw CKB’s model as kind of just another version of Bitcoin's UTXO. This week, I finally understood why it’s actually so much more powerful.
 
-At first, I saw CKB’s model as just another version of UTXO.
+* Every single transaction **consumes old cells and creates brand new ones**.
+* There is no such thing as "updating state in place."
+* State is always **replaced, never modified**.
 
-Now I understand what actually makes it powerful.
+When you really think about it, this totally changes how you design systems. Instead of telling the blockchain to "update my balance," you're essentially saying, "here's the old state, destroy it, and create this entirely new state representing what happens next." It’s profound, and it forms the whole foundation for everything else I learned this week.
 
-* Every transaction **consumes cells and creates new ones**
-* There is no “updating state”
-* State is always **replaced, not modified**
+### 2. Lock Scripts vs. Type Scripts
+I finally got this straight in my head:
+* **Lock Script** → Acts as the bouncer. It dictates *who* is allowed to unlock and spend the cell.
+* **Type Script** → Acts as the rulebook. It dictates *what* the cell actually represents and what the rules are for transitioning its state.
 
-That changes how you design systems.
+This clear separation is what makes CKB programmable on a much deeper level than standard blockchains. You’re not just tossing tokens around; you’re setting up rigid logic rules.
 
-Instead of thinking:
+### 3. Hello, Fiber Network
+I started exploring the Fiber Network—which is essentially CKB's payment layer. 
+* It’s built entirely on top of CKB.
+* It totally takes inspiration from Bitcoin's Lightning Network.
+* It allows for **blazing fast and super cheap off-chain payments**.
+* But because of CKB's design, it supports way more **programmable assets**, not just simple native token transfers!
 
-> “update balance”
+It’s not just a Lightning copycat; it extends the concept massively by leveraging the Cell Model.
 
-You think:
+### 4. How Fiber Payment Channels Actually Work
+This is where the magic happens. Instead of paying gas fees and waiting for the blockchain every single time you want to transact:
 
-> “create a new state from the previous one”
+* **Opening a Channel**: Funds get locked on-chain in a shared cell between participants. (Blockchain happens here).
+* **Off-chain Transactions**: We just swap signed states back and forth locally. (Zero blockchain interaction here!).
+* **Closing a Channel**: The absolute final state is agreed upon and submitted to the chain, and funds are divvied up. (Blockchain happens here).
 
-That’s the foundation for everything else I learned this week.
+Instead of `transaction → wait → repeat`, you get `transact freely → settle once`. The efficiency gains are just absurd.
 
----
+### 5. Enter Perun (State Channels)
+While Fiber focuses heavily on payment channels, Perun takes it to the next level: **State channels**.
+The difference?
+* **Payment channels (Fiber)** → Awesome for transferring value back and forth.
+* **State channels (Perun)** → Awesome for transferring *any shared state* back and forth.
 
-### 2. Lock Scripts vs Type Scripts
-
-This distinction is now clear to me:
-
-* **Lock Script**
-  → defines *who can unlock/spend a cell*
-
-* **Type Script**
-  → defines *what the cell represents*
-
-This separation is what makes CKB programmable at a deeper level than typical blockchains.
-
-You’re not just sending tokens — you’re defining rules.
-
----
-### 3. Fiber Network (CKB’s Payment Layer)
-
-I explored the Fiber Network as a practical implementation of payment channels.
-
-My understanding of it:
-
-* Built on top of CKB
-* Inspired by the Lightning Network
-* Enables **fast and low-cost off-chain payments**
-* Supports **more programmable assets**, not just simple transfers
-
-So it’s not just copying Lightning — it extends it using CKB’s design.
-
----
-### 4. Fiber Payment Channels (Understanding)
-
-This is where things started getting real.
-
-Instead of sending transactions every time:
-
-#### Opening a Channel
-
-* Funds are locked on-chain between participants
-
-#### Off-chain Transactions
-
-* Participants exchange signed states
-* No blockchain interaction happens here
-
-#### Closing a Channel
-
-* Final state is submitted on-chain
-* Funds are distributed
-
-So instead of:
-
-> transaction → wait → repeat
-
-You get:
-
-> transact freely → settle once
-
-That’s a massive shift in efficiency.
-
----
-
-### 5. Perun (State Channels)
-
-Perun introduces a more general concept:
-
-> Off-chain state updates, not just payments.
-
-Difference I understood:
-
-* **Payment channels (Fiber)** → focused on value transfer
-* **State channels (Perun)** → can represent any shared state
-
-This is where things move from payments to full off-chain applications.
+This means you can start building full-blown, complex off-chain applications, not just payment systems.
 
 ---
 
 ##  What I Built / Implemented
 
 
-
 ### Fiber Node Setup
+I automated the hassle of setting up a Fiber node by building a script that:
+* Installs all the necessary dependencies.
+* Sets up the node automatically.
+* Exports keys using `ckb-cli`.
+* Fires up the node so it's ready to go.
 
-* Built a **Fiber node setup script**
-* Automated:
+### Driving Fiber with TypeScript
+Using `curl` got old fast, so I wrote a suite of reusable TypeScript wrappers to:
+* Grab the node info.
+* List out all my open channels.
+* Open new channels.
+* Close channels gracefully.
 
-  * Installation of dependencies
-  * Node setup
-  * Key export using `ckb-cli`
-  * Node startup
+### Putting it to the Test (Hackathon MVP!)
+I actually participated in the **CKB CLAW Agents Hackathon**! I applied everything I had been learning to build my project: **Flawless (OmniFlow)**.
 
----
-
-### Fiber Interaction via TypeScript
-
-Instead of using curl, I created reusable scripts:
-
-* Fetch node info
-* List channels
-* Open channels
-* Close channels
-
-This made interactions cleaner and reusable.
+More details in end of Month 1 Report
 
 ---
 
-### Applying This in a Real Project
+## 🛠 Running My Fiber Scripts
 
-I participated in the **CKB CLAW Agents Hackathon**, where I applied most of what I learned.
-
-I integrated these concepts into my project:
-
-> **Flawless (OmniFlow)**
-
-What I applied:
-
-* Structured interactions with blockchain systems
-* Agent-based workflows interacting with on-chain logic
-* Better understanding of how to optimize execution using on-chain flows
-
-This is where everything started making practical sense.
-
----
-
-##  Running the Fiber Scripts
-
-I structured Fiber interactions into TypeScript scripts so I can run them directly.
-
-From Month-1 root , run the following
-
-### Install dependencies
-
+If you want to play around with what I built, make sure you're in the `/Month-1` root directory and install everything:
 ```bash
 npm install
 ```
 
----
+Then you can run the scripts via npm:
 
-### Run scripts
-
+**Get node info:**
 ```bash
 npm run fiber:info
 ```
-
+**List open channels:**
 ```bash
 npm run fiber:channels
 ```
-
+**Open a new channel:**
 ```bash
 npm run fiber:open -- --peerId <PEER_ID> --amount 10000000000 --public true
 ```
-
+**Close a channel:**
 ```bash
 npm run fiber:close -- --channelId <CHANNEL_ID>
 ```
 
----
-
-##  Fiber RPC Configuration
-
-These scripts connect to the Fiber node via RPC.
-
-I set it like this:
-
+### Heads up on RPC Config!
+My scripts need to know where your Fiber node RPC is hanging out. I export my local one like this:
 ```bash
 export FIBER_RPC_URL=http://127.0.0.1:8227
 ```
-
-If not set, it defaults to:
-
-```text
-http://127.0.0.1:8227
-```
+(If you don't set it, the scripts will just lazily default to `http://127.0.0.1:8227` anyway!)
 
 ---
 
-##  Key Insight
 
-The biggest realization this week:
-
-> CKB is not just UTXO — it’s programmable state built on UTXO.
-
-* You don’t mutate state — you replace it
-* Its not necessary to rely on on-chain execution — you can move logic off-chain for cheaper and faster execution.
-* You don’t scale by increasing throughput — you scale by reducing on-chain usage
-
-That’s the real design shift.
-
----
- It’s not about making transactions faster — it’s about changing how you think about state and execution.
-
----
 
