@@ -1,22 +1,22 @@
-
 import { fiberClient } from "./client.js";
 
 function getArg(flag: string): string | undefined {
   const index = process.argv.indexOf(flag);
-  if (index === -1) return undefined;
+  if (index === -1 || index + 1 >= process.argv.length) return undefined;
   return process.argv[index + 1];
 }
 
 export interface OpenChannelParams {
   peerId: string;
-  fundingAmount: string;
-  public: boolean;
+  fundingAmount: string; // expected Fiber amount format, e.g. hex string
+  isPublic?: boolean;
 }
 
-export async function openChannel(params: OpenChannelParams) {
-  const { peerId, fundingAmount, public: isPublic } = params;
-
-  // Replace "open_channel" and param shape with the exact Fiber RPC docs if needed.
+export async function openChannel({
+  peerId,
+  fundingAmount,
+  isPublic = false,
+}: OpenChannelParams) {
   return fiberClient.call("open_channel", [
     {
       peer_id: peerId,
@@ -37,7 +37,7 @@ async function main() {
   const result = await openChannel({
     peerId,
     fundingAmount,
-    public: isPublic,
+    isPublic,
   });
 
   console.log(JSON.stringify(result, null, 2));

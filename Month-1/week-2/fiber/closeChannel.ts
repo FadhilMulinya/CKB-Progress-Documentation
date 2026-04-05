@@ -3,7 +3,7 @@ import { fiberClient } from "./client.js";
 
 function getArg(flag: string): string | undefined {
   const index = process.argv.indexOf(flag);
-  if (index === -1) return undefined;
+  if (index === -1 || index + 1 >= process.argv.length) return undefined;
   return process.argv[index + 1];
 }
 
