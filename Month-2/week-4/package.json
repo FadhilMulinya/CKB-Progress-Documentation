@@ -1,0 +1,29 @@
+{
+  "name": "ckb-wallet-extension",
+  "version": "1.0.0",
+  "description": "CKB browser wallet Chrome extension (Month 2 / Week 4)",
+  "type": "module",
+  "scripts": {
+    "dev": "parcel watch manifest.json --no-hmr",
+    "build": "parcel build manifest.json --no-cache",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.13.0",
+    "@types/qrcode": "^1.5.6",
+    "buffer": "^6.0.3",
+    "chrome-types": "^0.1.425",
+    "crypto-browserify": "^3.12.1",
+    "events": "^3.3.0",
+    "parcel": "^2.13.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "string_decoder": "^1.3.0",
+    "typescript": "^6.0.2",
+    "vm-browserify": "^1.1.2"
+  },
+  "dependencies": {
+    "@ckb-lumos/lumos": "^0.23.0",
+    "qrcode": "^1.5.4"
+  }
+}

@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@ckb-lumos/lumos": "^0.23.0",
+    "chrome-types": "^0.1.425",
     "config": "link:@ckb-lumos/lumos/config"
   }
 }
