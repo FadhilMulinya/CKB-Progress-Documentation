@@ -69,4 +69,4 @@ light-client/
 # =========================
 # Secrets / Keys
 # =========================
-*.key
+*.key.parcel-cache/
