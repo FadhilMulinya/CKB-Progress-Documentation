@@ -23,7 +23,12 @@
     "vm-browserify": "^1.1.2"
   },
   "dependencies": {
-    "@ckb-lumos/lumos": "^0.23.0",
+    "@ckb-ccc/core": "^1.12.5",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.8.5",
+    "knip": "^6.4.1",
+    "mongodb": "^7.1.1",
+    "mongoose": "^9.4.1",
     "qrcode": "^1.5.4"
   }
 }
