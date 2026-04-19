@@ -39,12 +39,27 @@ export interface ChromeStorage {
     ckb_key?: string;
 }
 
-// Payment Link types
+// Signed Payment Link types
+export type AssetType = "CKB";
+
 export interface PaymentLinkParams {
+    prefix: string;
     address: string;
-    amount?: number;
-    label?: string;
-    message?: string;
-    asset: 'CKB';
-    v: number;
+    amount: number;
+    asset: AssetType;
+    expiryHours: number;
+}
+
+export interface CompactPaymentPayload {
+    a: string; // address
+    n: number; // amount
+    t: AssetType; // asset
+    e: number; // expiry hours
+    i: number; // issued-at timestamp
+}
+
+export interface ParsedPaymentLink {
+    prefix: string;
+    payload: CompactPaymentPayload;
+    signature: string;
 }

@@ -278,20 +278,31 @@
 
             <!-- Request panel -->
             <div id="panel-request" class="panel hidden">
-                <div class="form-group">
-                    <label class="field-label">Amount</label>
-                    <div class="input-with-unit">
-                        <input type="number" id="input-req-amount" placeholder="0" min="0">
-                        <span class="input-unit">CKB</span>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label class="field-label">Prefix (3 chars)</label>
+                        <input type="text" id="input-req-prefix" placeholder="FAD" maxlength="3"
+                            style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label class="field-label">Asset</label>
+                        <select id="select-req-asset" class="input-select">
+                            <option value="CKB">CKB</option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="field-label">Label (optional)</label>
-                    <input type="text" id="input-req-label" placeholder="e.g. Pizza">
-                </div>
-                <div class="form-group">
-                    <label class="field-label">Message (optional)</label>
-                    <input type="text" id="input-req-message" placeholder="e.g. For last night">
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label class="field-label">Amount</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="input-req-amount" placeholder="0" min="0">
+                            <span class="input-unit">CKB</span>
+                        </div>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label class="field-label">Expiry (Hours)</label>
+                        <input type="number" id="input-req-expiry" placeholder="24" min="1" value="24">
+                    </div>
                 </div>
 
                 <div id="request-qr-area" class="hidden">

@@ -3,7 +3,7 @@ import { setPassword, isPasswordSet, verifyPassword } from './password.js';
 import { saveKey, getKey, hasKey } from './localStorage.js';
 import { generatePrivateKey, getAddress, getBalance, sendCKB } from './ckb.js';
 import { generatePaymentLink, parsePaymentLink, validatePaymentLink } from './paymentLinks.js';
-import type { ScreenType, PaymentLinkParams } from './types.js';
+import type { ScreenType, PaymentLinkParams, AssetType } from './types.js';
 
 /**
  * UI Controller - handles all DOM interactions and event listeners
@@ -14,6 +14,7 @@ interface DOMElements {
     screens: Record<ScreenType, HTMLElement | null>;
     buttons: Record<string, HTMLElement | null>;
     inputs: Record<string, HTMLInputElement | null>;
+    selects: Record<string, HTMLSelectElement | null>;
     displays: Record<string, HTMLElement | null>;
 }
 
@@ -60,9 +61,12 @@ class CKBWalletUI {
                 amount: document.getElementById('input-amount') as HTMLInputElement,
                 paymentLink: document.getElementById('input-payment-link') as HTMLInputElement,
                 reqAmount: document.getElementById('input-req-amount') as HTMLInputElement,
-                reqLabel: document.getElementById('input-req-label') as HTMLInputElement,
-                reqMessage: document.getElementById('input-req-message') as HTMLInputElement,
+                reqPrefix: document.getElementById('input-req-prefix') as HTMLInputElement,
+                reqExpiry: document.getElementById('input-req-expiry') as HTMLInputElement,
                 verifyPKPassword: document.getElementById('input-verify-pw') as HTMLInputElement
+            },
+            selects: {
+                reqAsset: document.getElementById('select-req-asset') as HTMLSelectElement,
             },
             displays: {
                 walletAddress: document.getElementById('wallet-address'),
@@ -353,19 +357,28 @@ class CKBWalletUI {
         // Payment Link Import
         this.elements.inputs.paymentLink?.addEventListener('input', async (e) => {
             const val = (e.target as HTMLInputElement).value.trim();
-            if (validatePaymentLink(val)) {
-                try {
-                    const params = parsePaymentLink(val);
-                    if (this.elements.inputs.toAddress) this.elements.inputs.toAddress.value = params.address;
-                    if (this.elements.inputs.amount && params.amount) this.elements.inputs.amount.value = params.amount.toString();
+            if (val.startsWith('ckbl:')) {
+                const isValid = await validatePaymentLink(val);
+                if (isValid) {
+                    try {
+                        const { payload } = await parsePaymentLink(val);
+                        if (this.elements.inputs.toAddress) this.elements.inputs.toAddress.value = payload.a;
+                        if (this.elements.inputs.amount) this.elements.inputs.amount.value = payload.n.toString();
 
+                        if (this.elements.displays.sendStatus) {
+                            this.elements.displays.sendStatus.classList.remove('hidden');
+                            this.elements.displays.sendStatus.className = 'msg success';
+                            this.elements.displays.sendStatus.textContent = `Signed link verified! Asset: ${payload.t}`;
+                        }
+                    } catch (err) {
+                        console.error('Parse failed', err);
+                    }
+                } else {
                     if (this.elements.displays.sendStatus) {
                         this.elements.displays.sendStatus.classList.remove('hidden');
-                        this.elements.displays.sendStatus.className = 'msg success';
-                        this.elements.displays.sendStatus.textContent = `Link parsed! ${params.label ? 'Req: ' + params.label : ''}`;
+                        this.elements.displays.sendStatus.className = 'msg error';
+                        this.elements.displays.sendStatus.textContent = 'Invalid or expired signed link.';
                     }
-                } catch (err) {
-                    console.error('Parse failed', err);
                 }
             }
         });
@@ -374,36 +387,51 @@ class CKBWalletUI {
         this.elements.buttons.genRequest?.addEventListener('click', async () => {
             const addr = this.elements.displays.walletAddress?.textContent || '';
             const amount = parseFloat(this.elements.inputs.reqAmount?.value || '0');
-            const label = this.elements.inputs.reqLabel?.value.trim();
-            const message = this.elements.inputs.reqMessage?.value.trim();
+            const prefix = this.elements.inputs.reqPrefix?.value.trim().toUpperCase() || 'CKB';
+            const expiryHours = parseInt(this.elements.inputs.reqExpiry?.value || '24');
+            const asset = (this.elements.selects.reqAsset?.value as AssetType) || 'CKB';
 
-            const params: PaymentLinkParams = {
-                address: addr,
-                amount: amount > 0 ? amount : undefined,
-                label: label || undefined,
-                message: message || undefined,
-                asset: 'CKB',
-                v: 1
-            };
-
-            const link = generatePaymentLink(params);
-
-            if (this.elements.displays.displayPaymentLink) {
-                this.elements.displays.displayPaymentLink.textContent = link;
+            if (!prefix || prefix.length !== 3) {
+                alert('Prefix must be exactly 3 characters.');
+                return;
             }
 
-            this.elements.displays.reqQRArea?.classList.remove('hidden');
+            if (amount <= 0) {
+                alert('Amount must be greater than 0.');
+                return;
+            }
 
             try {
-                if (this.elements.displays.reqQRCanvas) {
-                    await QRCode.toCanvas(
-                        this.elements.displays.reqQRCanvas,
-                        link,
-                        { width: 180, margin: 2, color: { dark: '#000000', light: '#ffffff' } }
-                    );
+                const privateKey = await getKey();
+                if (!privateKey) throw new Error('Wallet locked or not initialized');
+
+                const link = await generatePaymentLink({
+                    prefix,
+                    address: addr,
+                    amount,
+                    asset,
+                    expiryHours
+                }, privateKey);
+
+                if (this.elements.displays.displayPaymentLink) {
+                    this.elements.displays.displayPaymentLink.textContent = link;
+                }
+
+                this.elements.displays.reqQRArea?.classList.remove('hidden');
+
+                try {
+                    if (this.elements.displays.reqQRCanvas) {
+                        await QRCode.toCanvas(
+                            this.elements.displays.reqQRCanvas,
+                            link,
+                            { width: 180, margin: 2, color: { dark: '#000000', light: '#ffffff' } }
+                        );
+                    }
+                } catch (qrError) {
+                    console.error('QR generation for request failed:', qrError);
                 }
             } catch (error) {
-                console.error('QR generation failed:', error);
+                console.error('Request generation failed:', error);
             }
         });
 

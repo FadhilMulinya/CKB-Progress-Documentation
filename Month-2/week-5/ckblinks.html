@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKB Wallet - Signed Payment Links</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="A self-custodial CKB Chrome extension demoing tamper-evident signed payment links. No backend, no database, 100% local.">
+</head>
+
+<body>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+
+    <nav>
+        <div class="container nav-content">
+            <div class="logo">
+                <span class="logo-text">CKB<span>Wallet</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="https://github.com/FadhilMulinya/CKB-Progress-Documentation" target="_blank"
+                    class="btn-secondary">View Repo</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="fade-in">Secure, Tamper-Evident <br><span class="accent">Signed Payment Links</span></h1>
+                    <p class="subtitle fade-in-delay">Building a self-custodial CKB experience with zero backend
+                        dependencies. Everything stays local. Everything stays private.</p>
+
+                    <div class="demo-card fade-in-up">
+                        <div class="card-header">
+                            <div class="dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <div class="url-bar">ckb-extension://demo/receive</div>
+                        </div>
+                        <div class="card-content">
+                            <img src="paymentlinks.png" alt="CKB Payment Links Interface" class="demo-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features container">
+            <div class="feature-pills">
+                <div class="pill">
+                    <div class="pill-icon">🔒</div>
+                    <h3>100% Local</h3>
+                    <p>No MongoDB. No backend servers. Your keys and payment data never leave your browser storage.</p>
+                </div>
+                <div class="pill">
+                    <div class="pill-icon">✍️</div>
+                    <h3>Signed Links</h3>
+                    <p>Using the official CCC SDK to generate <code>ckbl:</code> links that are cryptographically signed
+                        and immutable.</p>
+                </div>
+                <div class="pill">
+                    <div class="pill-icon">✨</div>
+                    <h3>Production Ready</h3>
+                    <p>Clean, modular architecture using TypeScript and Parcel for a seamless wallet experience.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="setup container">
+            <div class="setup-grid">
+                <div class="setup-info">
+                    <h2>Get Started with the Demo</h2>
+                    <p>Follow these steps to build and load the extension locally on your machine.</p>
+                    <ul class="steps">
+                        <li>
+                            <span class="step-num">01</span>
+                            <div class="step-text">
+                                <strong>Clone the Repository</strong>
+                                <code>git clone git@github.com:FadhilMulinya/CKB-Progress-Documentation.git</code>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">02</span>
+                            <div class="step-text">
+                                <strong>Navigate & Build</strong>
+                                <code>cd Month-2/week-4 && pnpm install && pnpm build</code>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="step-num">03</span>
+                            <div class="step-text">
+                                <strong>Load in Chrome</strong>
+                                <p>Go to <code>chrome://extensions</code>, enable <strong>Developer Mode</strong>, and
+                                    click <strong>Load Unpacked</strong>. Select the <code>dist</code> folder.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="setup-cta">
+                    <div class="cta-inner">
+                        <h3>Ready to contribute?</h3>
+                        <p>Check out the full progress documentation in the repository.</p>
+                        <a href="https://github.com/FadhilMulinya/CKB-Progress-Documentation" target="_blank"
+                            class="btn-primary">Go to Repository</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 CKB Progress Documentation. Built with ❤️ for the CKB Ecosystem.</p>
+            <div class="footer-links">
+                <span>Self-Custodial</span>
+                <span>•</span>
+                <span>Open Source</span>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
