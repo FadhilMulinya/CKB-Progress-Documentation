@@ -3,7 +3,7 @@
 /**
  * localStorage.ts
  * Wrappers around chrome.storage.local for persisting the wallet key
- * NOTE: Private key is stored as plaintext for educational purposes
+ * NOTE: Private key is stored locally as plaintext for educational purposes
  */
 
 // Check if we're in a Chrome extension context

@@ -1,7 +1,7 @@
 /// <reference types="chrome-types" />
 
 /**
- * Password management using Web Crypto API (SHA-256)
+ * Local extension Password management using Web Crypto API (SHA-256)
  * The hash is stored in chrome.storage.local - no plaintext password ever persists
  */
 
