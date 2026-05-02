@@ -1,3 +1,24 @@
+//! # Gift Card Contract for Nervos CKB
+//! 
+//! A time-locked gift card that allows anyone to claim the CKB
+//! after a specified block number.
+//!
+//! ## How it works
+//! - Creator locks CKB in a cell with this contract as type script
+//! - `claim_block` is passed in script arguments (8 bytes, little-endian)
+//! - Before claim_block: Transactions fail with `ERROR_TOO_EARLY`
+//! - After claim_block: Anyone can claim by preserving the data field
+//!
+//! ## Error Codes
+//! | Code | Constant | Description |
+//! |------|----------|-------------|
+//! | 0    | -        | Success |
+//! | 1    | `ERROR_TOO_EARLY` | Current block < claim_block |
+//! | 2    | `ERROR_MESSAGE_CHANGED` | Data field was modified |
+//! | 3    | `ERROR_NO_DATA` | Script args missing |
+
+
+
 /*
     #![...] — This is an inner attribute in Rust. It applies to the entire file/module.
     (If it was just #, it would apply to the next item only)
@@ -120,10 +141,14 @@ use core::convert::TryInto;
        This is your main() function. The CKB-VM starts executing here.
 */
 
+/// Error: Claim block has not been reached yet
 const ERROR_TOO_EARLY: i8 = 1;
+/// Error: Gift message was modified  
 const ERROR_MESSAGE_CHANGED: i8 = 2;
+/// Error: No script arguments provided
 const ERROR_NO_DATA: i8 = 3;
 
+/// Main entry point for the gift card contract
  pub fn program_entry() -> i8 {
 
 ckb_std::debug!(">>> STEP 0: program_entry started");
@@ -177,20 +202,3 @@ ckb_std::debug!(">>> STEP 7: comparing input and output data");
  0
 }
 
-/* 
-What This Contract Does (The Whole Picture)
-Alice creates a cell with:
-    Lock: anyone_can_pay (anyone can try to unlock)
-    Type: our gift card code, with args = [claim_block as 8 bytes]
-    Data: "Happy birthday!"
-Before claim_block: Anyone who tries to claim gets ERROR_TOO_EARLY
-
-After claim_block: First person to submit a transaction:
-
-Their transaction has the input cell (Alice's gift) and output cell (with their lock)
-
-CKB-VM runs our code: block check passes, message preserved → SUCCESS
-
-The output cell is created with their lock → they own the CKB
-
-* */
