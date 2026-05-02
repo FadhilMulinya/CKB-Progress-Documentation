@@ -1,0 +1,26 @@
+{
+  "status": "committed",
+  "block": {
+    "number": "0x13fd6f4 (20,965,364)",
+    "hash": "0x848083674d62dd28da92329b3a99aa07719fd3a5b59e4274db7be87247904711"
+  },
+  "transaction": {
+    "hash": "0xb0ca27900d645f486e487d168016e248f0e3d07315a2309612fd9a07899ff8fa",
+    "cycles": 1639407,
+    "fee": "0.00044216 CKB",
+    "your_contract": {
+      "output_index": 0,
+      "capacity": "43813 CKB",
+      "lock": "My wallet (sighash)",
+      "type": null,
+      "data_hex": "0x7f454c4602... (your compiled ELF binary)"
+    },
+    "change_output": {
+      "output_index": 1,
+      "capacity": "53686.99952939 CKB",
+      "lock": "My wallet (sighash)"
+    }
+  },
+  "how_to_get_code_hash": "ckb-cli util blake2b --binary-path build/release/gift-card",
+  "explorer_url": "https://testnet.explorer.nervos.org/transaction/0xb0ca27900d645f486e487d168016e248f0e3d07315a2309612fd9a07899ff8fa"
+}

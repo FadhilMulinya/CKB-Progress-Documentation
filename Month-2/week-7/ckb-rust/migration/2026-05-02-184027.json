@@ -1,0 +1,13 @@
+{
+  "cell_recipes": [
+    {
+      "name": "gift-card",
+      "tx_hash": "0xb0ca27900d645f486e487d168016e248f0e3d07315a2309612fd9a07899ff8fa",
+      "index": 0,
+      "occupied_capacity": 4381300000000,
+      "data_hash": "0xa4498ca25440ab54f5c22465a10083f851a9fadd5792d889bbe7801df8e815b2",
+      "type_id": null
+    }
+  ],
+  "dep_group_recipes": []
+}

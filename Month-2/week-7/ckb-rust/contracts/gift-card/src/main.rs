@@ -125,11 +125,17 @@ const ERROR_MESSAGE_CHANGED: i8 = 2;
 const ERROR_NO_DATA: i8 = 3;
 
  pub fn program_entry() -> i8 {
+
+ckb_std::debug!(">>> STEP 0: program_entry started");
+
  let script = load_script().expect("Failed to load script");
+
+ckb_std::debug!(">>> STEP 1: script loaded, args len = {}", script.args().len());
  let args = script.args().raw_data();
  let exact = 8 ;
     //args should be exactly 8 bytes ( a u64 block number)
     if args.len() < exact {
+     ckb_std::debug!(">>> FAIL: not enough args");
       return ERROR_NO_DATA;
     }
 
@@ -139,29 +145,35 @@ const ERROR_NO_DATA: i8 = 3;
          u64::from_le_bytes(bytes)
     };
 
+ckb_std::debug!(">>> STEP 2: claim_block = {}", claim_block);
+
  //Get the current block number
   let header = load_header(0, Source::HeaderDep).expect("Failed to load header. Did you add heade_deps to the transaction?");
 
-  let current_block=header.raw().number().unpack();
+  let current_block:u64 =header.raw().number().unpack();
 
-  //STEP 3: THE GIFT CARD RULE 
+ckb_std::debug!(">>> STEP 3: current_block = {}", current_block);
+
  //" Has claim block been reached?"
    if current_block < claim_block { 
        return ERROR_TOO_EARLY;
   }
  //NOTE: If we get here block was reached , Continue..
+ckb_std::debug!(">>> STEP 4: block check passed");
 
-    //STEP 4: Read the gift card message
     let input_data = load_cell_data(0, Source::GroupInput).expect("Failed to load input cell data");
-
+ ckb_std::debug!(">>> STEP 5: input_data loaded, len = {}", input_data.len());
     let output_data= load_cell_data(0, Source::GroupOutput).expect("Failed to load output cell data");
+ ckb_std::debug!(">>> STEP 6: output_data loaded, len = {}", output_data.len());
     
-    // STEP 5: Ensure the gift message wasn't changed
+ckb_std::debug!(">>> STEP 7: comparing input and output data");
     if input_data != output_data{
+
+        ckb_std::debug!(">>> FAIL: message changed");
        return ERROR_MESSAGE_CHANGED;
     }
 
-    //STEP 6: Everything checks out!
+     ckb_std::debug!(">>> SUCCESS!");
  0
 }
 
