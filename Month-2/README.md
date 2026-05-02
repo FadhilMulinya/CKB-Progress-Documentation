@@ -8,7 +8,7 @@ Built a Chrome extension for sending/receiving CKB on testnet. Password protecti
 
 ## Week 5: Payment Links
 
-Switched from Lumos to CCC SDK. Built Chrome CKB extension with local wallets and implemented offchain payment links `ckbl:`  -- encoded URLs with recipient, amount, expiry, and cryptographic signature. Extension verifies links, checks expiry, autofills forms.
+Switched from Lumos to CCC SDK. Extended week-4 Chrome CKB extension with offchain payment links `ckbl:`  -- encoded URLs with recipient, amount, expiry, and cryptographic signature. Extension verifies links, checks expiry, autofills forms.
 
 ---
 
@@ -30,3 +30,7 @@ Deep Dived into CKB Cell structure. Wrote a gift card contract in Rust -- lock f
 - Wrote and deployed Rust smart contract(s)
 - Built autonomous agents on CKB
 - Now I understand Cells, scripts, transactions at protocol level
+
+```
+NOTE: Every weeks progress is in its own folder
+```
