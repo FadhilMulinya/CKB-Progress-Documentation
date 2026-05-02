@@ -86,11 +86,31 @@ ckb_std::entry!(program_entry);
     This configuration says: "I need ~1.2 MB for heap allocations."
 
     Plain English: "Give me a memory allocator so I can use Vec, String, format!, etc."
-
-
 */
 #[cfg(not(any(feature = "library", test)))]
 ckb_std::default_alloc!(16384, 1258306, 64);
+
+/*
+    These imports bring in the CKB tools we need to read blockchain data.
+
+    ckb_constants::Source tells us where to look for cells. It's like an address book for inputs, outputs, and headers.
+
+    ckb_types::prelude gives us helper functions. We use .unpack() to decode numbers and .raw_data() to get raw bytes.
+
+    load_cell_data reads the data field of a cell. We'll use this to get the gift card message stored on chain.
+
+    load_script reads the current script's configuration. We use this to get the claim block number from the script arguments.
+
+    load_header reads block information. We need this to get the current block number and check if enough time has passed.
+
+    TryInto lets us safely convert between types. We'll use it to turn raw bytes into fixed-size arrays like [u8; 8].
+*/
+use ckb_std::{
+    ckb_constants::Source,
+    ckb_types::prelude::*,
+    high_level::{load_cell_data, load_script, load_header},
+};
+use core::convert::TryInto;
 
 /*
     pub — Public function (can be called from outside)
@@ -99,8 +119,39 @@ ckb_std::default_alloc!(16384, 1258306, 64);
        -> i8 — Returns an 8-bit signed integer. 0 = success, anything else = error code.
        This is your main() function. The CKB-VM starts executing here.
 */
-pub fn program_entry() -> i8 {
-    ckb_std::debug!("This is a sample contract!");
 
-    0
+const ERROR_TOO_EARLY: i8 = 1;
+const ERROR_MESSAGE_CHANGED: i8 = 2;
+const ERROR_NO_DATA: i8 = 3;
+
+ pub fn program_entry() -> i8 {
+ let script = load_script().expect("Failed to load script");
+ let args = script.args();
+ let exact = 8
+    //args should be exactly 8 bytes ( a u64 block number)
+    if args.len() < exact {
+      return ERROR_NO_DATA;
+    }
+
+    //Convert first 8 bytes to a u64 number (little endian)
+    let claim_block:u64 = {
+         let bytes: [u8; 8] = args[0..8].try_into().unwrap();
+         u64::from_le_bytes(bytes)
+    };
+
+ //Get the current block number
+  let header = load_header(0, Source::HeaderDep).expect("Failed to load header. Did you add heade_deps to the transaction?");
+
+  let current_block=header.raw().number().unpack();
+
+  //STEP 3: THE GIFT CARD RULE 
+ //" Has claim block been reached?"
+   if current_block < claim_block { 
+       return ERROR_TOO_EARLY;
+  }
+ //NOTE: If we get here block was reached , Continue..
+
+ 
+    //STEP 4: Read the gift card message
+    let input_data = load_cell_data
 }
