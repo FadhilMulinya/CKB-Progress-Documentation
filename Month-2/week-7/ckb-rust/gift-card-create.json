@@ -1,0 +1,59 @@
+{
+  "mock_info": {
+    "inputs": [],
+    "cell_deps": [
+      {
+        "cell_dep": {
+          "out_point": {
+            "tx_hash": "0xb0ca27900d645f486e487d168016e248f0e3d07315a2309612fd9a07899ff8fa",
+            "index": "0x0"
+          },
+          "dep_type": "code"
+        },
+        "output": {
+          "capacity": "0x3fc19d48500",
+          "lock": {
+            "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+            "hash_type": "type",
+            "args": "0xa3d3fbe1611afacc814c32737c524536a6f11177"
+          },
+          "type": null
+        },
+        "data": "0x{{data ../../build/release/gift-card}}"
+      }
+    ],
+    "header_deps": []
+  },
+  "tx": {
+    "version": "0x0",
+    "cell_deps": [
+      {
+        "out_point": {
+          "tx_hash": "0xb0ca27900d645f486e487d168016e248f0e3d07315a2309612fd9a07899ff8fa",
+          "index": "0x0"
+        },
+        "dep_type": "code"
+      }
+    ],
+    "header_deps": [],
+    "inputs": [],
+    "outputs": [
+      {
+        "capacity": "0x5f5e100",
+        "lock": {
+          "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+          "hash_type": "type",
+          "args": "0xa3d3fbe1611afacc814c32737c524536a6f11177"
+        },
+        "type": {
+          "code_hash": "0xa4498ca25440ab54f5c22465a10083f851a9fadd5792d889bbe7801df8e815b2",
+          "hash_type": "data",
+          "args": "0x90d83f0100000000"
+        }
+      }
+    ],
+    "outputs_data": [
+      "0x486170707920626972746864617921"
+    ]
+  }
+}
