@@ -126,8 +126,8 @@ const ERROR_NO_DATA: i8 = 3;
 
  pub fn program_entry() -> i8 {
  let script = load_script().expect("Failed to load script");
- let args = script.args();
- let exact = 8
+ let args = script.args().raw_data();
+ let exact = 8 ;
     //args should be exactly 8 bytes ( a u64 block number)
     if args.len() < exact {
       return ERROR_NO_DATA;
@@ -151,7 +151,34 @@ const ERROR_NO_DATA: i8 = 3;
   }
  //NOTE: If we get here block was reached , Continue..
 
- 
     //STEP 4: Read the gift card message
-    let input_data = load_cell_data
+    let input_data = load_cell_data(0, Source::GroupInput).expect("Failed to load input cell data");
+
+    let output_data= load_cell_data(0, Source::GroupOutput).expect("Failed to load output cell data");
+    
+    // STEP 5: Ensure the gift message wasn't changed
+    if input_data != output_data{
+       return ERROR_MESSAGE_CHANGED;
+    }
+
+    //STEP 6: Everything checks out!
+ 0
 }
+
+/* 
+What This Contract Does (The Whole Picture)
+Alice creates a cell with:
+    Lock: anyone_can_pay (anyone can try to unlock)
+    Type: our gift card code, with args = [claim_block as 8 bytes]
+    Data: "Happy birthday!"
+Before claim_block: Anyone who tries to claim gets ERROR_TOO_EARLY
+
+After claim_block: First person to submit a transaction:
+
+Their transaction has the input cell (Alice's gift) and output cell (with their lock)
+
+CKB-VM runs our code: block check passes, message preserved → SUCCESS
+
+The output cell is created with their lock → they own the CKB
+
+* */
