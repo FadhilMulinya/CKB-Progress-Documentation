@@ -1,0 +1,36 @@
+{
+  "devnet": {
+    "simple-sudt": {
+      "codeHash": "0xaf49063e2836e3d0f8fbb913a0532d47f0e3534e9db6232e7f7b803c0736e228",
+      "hashType": "data2",
+      "cellDeps": [
+        {
+          "cellDep": {
+            "outPoint": {
+              "txHash": "0x6c6000d689283fd0e96f12a2618129bfe4ca5d6e882dddc741bb91f04b623e08",
+              "index": 0
+            },
+            "depType": "code"
+          }
+        }
+      ]
+    },
+    "simple-xudt": {
+      "codeHash": "0x465f7579592a41e824ae5526e2350092eeab3c2175e4eeab1fdc254b45b620b3",
+      "hashType": "data2",
+      "cellDeps": [
+        {
+          "cellDep": {
+            "outPoint": {
+              "txHash": "0xb655bbc707200f7422df153b7850ffab93f9d2a44dd2cae4d08a3c01bcf4d42b",
+              "index": 0
+            },
+            "depType": "code"
+          }
+        }
+      ]
+    }
+  },
+  "testnet": {},
+  "mainnet": {}
+}
