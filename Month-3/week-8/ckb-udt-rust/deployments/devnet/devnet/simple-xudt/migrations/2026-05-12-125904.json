@@ -1,0 +1,12 @@
+{
+  "cell_recipes": [
+    {
+      "name": "simple-xudt",
+      "tx_hash": "0xf5e94dc0733c6fc2ec3a02da59193cbe47f9b8c1470525e06857420fecfa50c3",
+      "index": 0,
+      "occupied_capacity": 1506400000000,
+      "data_hash": "0x44db9a1d47d337549d65f514c5d605895ec2dd60680ccacc173e8d3b5fe302e8"
+    }
+  ],
+  "dep_group_recipes": []
+}
