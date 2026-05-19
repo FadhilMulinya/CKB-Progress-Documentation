@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="832" height="427" viewBox="0 0 832 427" role="img" aria-labelledby="title desc">
+  <title id="title">Rust fundamentals refresher progress</title>
+  <desc id="desc">A recreated terminal snapshot showing Rust exercise progress while revisiting fundamentals alongside CKB work.</desc>
+  <rect width="832" height="427" fill="#2b0f2b"/>
+  <rect x="0" y="0" width="832" height="43" fill="#3b203b"/>
+  <text x="24" y="28" fill="#f4f4f4" font-family="monospace" font-size="14">CKB-Progress-Documentation</text>
+  <text x="56" y="74" fill="#f8f8f2" font-family="monospace" font-size="17">Current  State   Name                 Path</text>
+
+  <g font-family="monospace" font-size="16">
+    <text x="115" y="106" fill="#47d166">DONE</text>
+    <text x="207" y="106" fill="#f8f8f2">modules2</text>
+    <text x="388" y="106" fill="#6db5ff">exercises/10_modules/modules2.rs</text>
+
+    <text x="115" y="136" fill="#47d166">DONE</text>
+    <text x="207" y="136" fill="#f8f8f2">modules3</text>
+    <text x="388" y="136" fill="#6db5ff">exercises/10_modules/modules3.rs</text>
+
+    <text x="115" y="166" fill="#47d166">DONE</text>
+    <text x="207" y="166" fill="#f8f8f2">hashmaps1</text>
+    <text x="388" y="166" fill="#6db5ff">exercises/11_hashmaps/hashmaps1.rs</text>
+
+    <text x="115" y="196" fill="#47d166">DONE</text>
+    <text x="207" y="196" fill="#f8f8f2">hashmaps2</text>
+    <text x="388" y="196" fill="#6db5ff">exercises/11_hashmaps/hashmaps2.rs</text>
+
+    <text x="26" y="226" fill="#ff9e3d">&gt;&gt;&gt;&gt;&gt;&gt;</text>
+    <text x="115" y="226" fill="#ffd75f">PENDING</text>
+    <text x="207" y="226" fill="#f8f8f2">hashmaps3</text>
+    <text x="388" y="226" fill="#6db5ff">exercises/11_hashmaps/hashmaps3.rs</text>
+
+    <text x="115" y="256" fill="#ffd75f">PENDING</text>
+    <text x="207" y="256" fill="#f8f8f2">quiz2</text>
+    <text x="388" y="256" fill="#6db5ff">exercises/quizzes/quiz2.rs</text>
+
+    <rect x="24" y="274" width="784" height="23" fill="#efefef"/>
+    <text x="115" y="292" fill="#000000">PENDING</text>
+    <text x="239" y="292" fill="#000000" font-weight="700">options1</text>
+    <text x="388" y="292" fill="#2454c4">exercises/12_options/options1.rs</text>
+
+    <text x="115" y="322" fill="#ffd75f">PENDING</text>
+    <text x="207" y="322" fill="#f8f8f2">options2</text>
+    <text x="388" y="322" fill="#6db5ff">exercises/12_options/options2.rs</text>
+
+    <text x="115" y="352" fill="#ffd75f">PENDING</text>
+    <text x="207" y="352" fill="#f8f8f2">options3</text>
+    <text x="388" y="352" fill="#6db5ff">exercises/12_options/options3.rs</text>
+  </g>
+
+  <text x="7" y="382" fill="#f8f8f2" font-family="monospace" font-size="16">Progress: [</text>
+  <rect x="104" y="369" width="463" height="14" rx="2" fill="#1d1d1d"/>
+  <rect x="104" y="369" width="324" height="14" rx="2" fill="#57d957"/>
+  <text x="570" y="382" fill="#ff6a6a" font-family="monospace" font-size="16">-----------------</text>
+  <text x="730" y="382" fill="#f8f8f2" font-family="monospace" font-size="16">] 45/94</text>
+
+  <text x="7" y="410" fill="#f8f8f2" font-family="monospace" font-size="16">↓/j ↑/k home/g end/G | &lt;c&gt;ontinue at | &lt;r&gt;eset exercise</text>
+</svg>

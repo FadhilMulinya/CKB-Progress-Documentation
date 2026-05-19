@@ -1,0 +1,15 @@
+[package]
+name = "badges"
+version = "0.1.0"
+edition = "2021"  # Change from 2024 to 2021 for stability
+
+[dependencies]
+blake2b-ref = "0.3.1"
+ckb-std = { version = "1.1.0", default-features = false, features = ["allocator", "dummy-atomic"] }
+hashbrown = "0.17.1"
+molecule = { version = "0.9.2", default-features = false, features = ["bytes_vec"] }
+ckb-gen-types = { version = "1.1.0", default-features = false }
+
+[features]
+default = []
+native-simulator = ["ckb-std/native-simulator"]
