@@ -1,0 +1,29 @@
+{
+  "name": "ckb-fraud-detection-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test:fraud1": "tsx src/fraud_1_missing_signature.ts",
+    "test:fraud2": "tsx src/fraud_2_wrong_witness.ts",
+    "test:fraud3": "tsx src/fraud_3_dust_attack.ts",
+    "test:fraud4": "tsx src/fraud_4_fake_type.ts",
+    "test:fraud5": "tsx src/fraud_5_replay_attack.ts",
+    "test:fraud6": "tsx src/fraud_6_no_witnesses.ts",
+    "test:all": "tsx src/fraud_detection_test.ts",
+    "test:devnet": "tsx src/devnet_fraud_test.ts",
+    "detect": "tsx src/detect_on_real_data.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@ckb-ccc/core": "^1.12.5",
+    "@ckb-ccc/shell": "^1.1.25"
+  }
+}
