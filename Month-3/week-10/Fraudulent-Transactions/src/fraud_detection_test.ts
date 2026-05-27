@@ -1,20 +1,5 @@
 import { ccc } from "@ckb-ccc/shell";
 
-// Helper function to convert capacity to number
-function capacityToNumber(capacity: ccc.FixedPoint): number {
-  // In @ckb-ccc/shell, capacity can be accessed differently
-  if (typeof capacity === 'bigint') {
-    return Number(capacity) / 100000000;
-  }
-  if (typeof capacity === 'string') {
-    return parseInt(capacity, 16) / 100000000;
-  }
-  // Try to get raw value
-  const raw = (capacity as any).value || (capacity as any).toString();
-  return Number(raw) / 100000000;
-}
-
-// Comprehensive fraud detection for CKB transactions
 interface FraudAlert {
   type: string;
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
@@ -22,127 +7,129 @@ interface FraudAlert {
   txHash?: string;
 }
 
+function parseCapacityShannons(capacity: any): bigint | null {
+  if (capacity === null || capacity === undefined) {
+    return null;
+  }
+
+  if (typeof capacity === 'bigint') {
+    return capacity;
+  }
+
+  if (typeof capacity === 'number') {
+    return BigInt(Math.floor(capacity));
+  }
+
+  if (typeof capacity === 'string') {
+    try {
+      return capacity.startsWith('0x') ? BigInt(capacity) : BigInt(Math.floor(Number(capacity)));
+    } catch {
+      return null;
+    }
+  }
+
+  if (typeof capacity === 'object') {
+    if ('value' in capacity) {
+      return parseCapacityShannons((capacity as any).value);
+    }
+    if (typeof (capacity as any).toString === 'function') {
+      return parseCapacityShannons((capacity as any).toString());
+    }
+  }
+
+  return null;
+}
+
 function detectFraud(tx: ccc.Transaction, txHash?: string): FraudAlert[] {
   const alerts: FraudAlert[] = [];
-  
-  // 1. WRONG WITNESS COUNT
+
   const expectedWitnesses = tx.inputs.length + 1;
-  if (tx.witnesses.length !== expectedWitnesses && tx.inputs.length > 0) {
+  if (tx.inputs.length > 0 && tx.witnesses.length !== expectedWitnesses) {
     alerts.push({
       type: 'WRONG_WITNESS_COUNT',
       severity: 'HIGH',
       details: `Expected ${expectedWitnesses} witnesses, got ${tx.witnesses.length}`,
-      txHash
+      txHash,
     });
   }
-  
-  // 2. MISSING/EMPTY SIGNATURES
+
   const emptyWitnesses = tx.witnesses.filter(w => !w || w === '0x');
   if (emptyWitnesses.length > 0) {
     alerts.push({
       type: 'MISSING_SIGNATURE',
       severity: 'CRITICAL',
       details: `${emptyWitnesses.length} empty witness(es) found`,
-      txHash
+      txHash,
     });
   }
-  
-  // 3. NO SIGNATURES AT ALL
-  if (tx.witnesses.every(w => !w || w === '0x' ) && tx.inputs.length > 0) {
+
+  if (tx.inputs.length > 0 && tx.witnesses.every(w => !w || w === '0x')) {
     alerts.push({
       type: 'NO_SIGNATURES',
       severity: 'CRITICAL',
       details: 'Transaction has 0 valid signatures',
-      txHash
+      txHash,
     });
   }
-  
-  // 4. DUST OUTPUTS
+
   const dustThreshold = 61; // CKB
   const dustOutputs: number[] = [];
-  
+  const zeroCapacityOutputs: number[] = [];
+
   for (let i = 0; i < tx.outputs.length; i++) {
-    const output = tx.outputs[i];
-    let capacityNum = 0;
-    
-    // Try different ways to get capacity
-    if (typeof output.capacity === 'bigint') {
-      capacityNum = Number(output.capacity) / 100000000;
-    } else if (typeof output.capacity === 'string') {
-      if (output.capacity.startsWith('0x')) {
-        capacityNum = parseInt(output.capacity, 16) / 100000000;
-      } else {
-        capacityNum = parseFloat(output.capacity);
-      }
-    } else if (output.capacity && typeof (output.capacity as any).toNumber === 'function') {
-      capacityNum = (output.capacity as any).toNumber() / 100000000;
-    } else {
-      // Try to get as fixed point
-      try {
-        const fixedPoint = output.capacity as any;
-        if (fixedPoint.value !== undefined) {
-          capacityNum = Number(fixedPoint.value) / 100000000;
-        }
-      } catch (e) {
-        console.warn(`Could not parse capacity for output ${i}`);
-      }
+    const shannons = parseCapacityShannons(tx.outputs[i].capacity);
+    if (shannons === null) {
+      continue;
     }
-    
-    if (capacityNum < dustThreshold && capacityNum > 0) {
+
+    const capacityCKB = Number(shannons) / 100000000;
+    if (capacityCKB > 0 && capacityCKB < dustThreshold) {
       dustOutputs.push(i);
     }
+
+    if (shannons === 0n) {
+      zeroCapacityOutputs.push(i);
+    }
   }
-  
+
   if (dustOutputs.length > 0) {
     alerts.push({
       type: 'DUST_OUTPUTS',
       severity: dustOutputs.length > 100 ? 'HIGH' : 'MEDIUM',
       details: `${dustOutputs.length} output(s) below ${dustThreshold} CKB minimum`,
-      txHash
+      txHash,
     });
   }
-  
-  // 5. EXCESSIVE OUTPUTS (Spam)
+
   if (tx.outputs.length > 500) {
     alerts.push({
       type: 'SPAM_ATTACK',
       severity: 'HIGH',
       details: `${tx.outputs.length} outputs in single transaction`,
-      txHash
+      txHash,
     });
   }
-  
-  // 6. ZERO CAPACITY OUTPUTS
-  const zeroCapacity: number[] = [];
-  for (let i = 0; i < tx.outputs.length; i++) {
-    const output = tx.outputs[i];
-    let capacityNum = 0;
-    
-    if (typeof output.capacity === 'bigint') {
-      capacityNum = Number(output.capacity);
-    } else if (typeof output.capacity === 'string') {
-      if (output.capacity.startsWith('0x')) {
-        capacityNum = parseInt(output.capacity, 16);
-      } else {
-        capacityNum = parseFloat(output.capacity) * 100000000;
-      }
-    }
-    
-    if (capacityNum === 0) {
-      zeroCapacity.push(i);
-    }
-  }
-  
-  if (zeroCapacity.length > 0) {
+
+  if (zeroCapacityOutputs.length > 0) {
     alerts.push({
       type: 'ZERO_CAPACITY_OUTPUT',
       severity: 'HIGH',
-      details: `${zeroCapacity.length} output(s) with 0 capacity`,
-      txHash
+      details: `${zeroCapacityOutputs.length} output(s) with 0 capacity`,
+      txHash,
     });
   }
-  
+
   return alerts;
+}
+
+function createFakeInput(): ccc.CellInput {
+  return ccc.CellInput.from({
+    previousOutput: {
+      txHash: '0x' + '0'.repeat(64),
+      index: '0x0',
+    },
+    since: '0x0',
+  });
 }
 
 // Test function
@@ -174,6 +161,7 @@ async function runTests() {
   const missingSigTx = ccc.Transaction.from({
     outputs: [{ capacity: 10000000000n, lock }]
   });
+  missingSigTx.inputs.push(createFakeInput());
   missingSigTx.witnesses = [];
   const missingAlerts = detectFraud(missingSigTx);
   console.log(`Results: ${missingAlerts.length} alerts (expected 2+)`);
@@ -205,20 +193,17 @@ async function runTests() {
   const wrongWitnessTx = ccc.Transaction.from({
     outputs: [{ capacity: 10000000000n, lock }]
   });
-  // Add an input to make the witness count matter
-  wrongWitnessTx.witnesses = []; // Wrong count if inputs exist
+  wrongWitnessTx.inputs.push(createFakeInput());
+  wrongWitnessTx.witnesses = ["0x"];
   const wrongAlerts = detectFraud(wrongWitnessTx);
   console.log(`Results: ${wrongAlerts.length} alerts`);
   wrongAlerts.forEach(a => console.log(`  - ${a.type}: ${a.details}`));
   
   // Test 5: Zero capacity outputs
   console.log("\n📋 Test 5: Zero Capacity Outputs");
-  const zeroCapTx = ccc.Transaction.from({
-    outputs: [
-      { capacity: 0n, lock },
-      { capacity: 10000000000n, lock }
-    ]
-  });
+  const zeroCapTx = ccc.Transaction.from({ outputs: [] });
+  zeroCapTx.outputs.push(ccc.CellOutput.from({ capacity: 0n, lock }));
+  zeroCapTx.outputs.push(ccc.CellOutput.from({ capacity: 10000000000n, lock }));
   const zeroAlerts = detectFraud(zeroCapTx);
   console.log(`Results: ${zeroAlerts.length} alerts (expected 1+)`);
   zeroAlerts.forEach(a => console.log(`  - ${a.type}: ${a.details}`));
@@ -229,6 +214,7 @@ async function runTests() {
   console.log(`  Legitimate tx: ${legitAlerts.length === 0 ? '✅ PASS' : '❌ FAIL'}`);
   console.log(`  Missing signatures: ${missingAlerts.length >= 2 ? '✅ PASS' : '❌ FAIL'}`);
   console.log(`  Dust attack: ${dustAlerts.length >= 1 ? '✅ PASS' : '❌ FAIL'}`);
+  console.log(`  Wrong witness count: ${wrongAlerts.some(a => a.type === 'WRONG_WITNESS_COUNT') ? '✅ PASS' : '❌ FAIL'}`);
   console.log(`  Zero capacity: ${zeroAlerts.length >= 1 ? '✅ PASS' : '❌ FAIL'}`);
 }
 
