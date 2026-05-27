@@ -10,8 +10,7 @@
     "test:fraud5": "tsx src/fraud_5_replay_attack.ts",
     "test:fraud6": "tsx src/fraud_6_no_witnesses.ts",
     "test:all": "tsx src/fraud_detection_test.ts",
-    "test:devnet": "tsx src/devnet_fraud_test.ts",
-    "detect": "tsx src/detect_on_real_data.ts"
+    "test:devnet": "tsx src/devnet_fraud_test.ts"
   },
   "keywords": [],
   "author": "",
